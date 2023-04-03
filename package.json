@@ -1,6 +1,6 @@
 {
   "name": "@bnb-chain/zkbnb-js-l1-sdk",
-  "version": "0.0.14",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,6 +16,8 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-terser": "^0.4.0",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",
     "@types/node": "^14.14.5",
@@ -37,6 +39,7 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
+    "semantic-release": "semantic-release",
     "format": "prettier --write './**/*.{ts,js}'",
     "lint": "npm run format && eslint  --ext .js,.ts --fix",
     "pre-commit": "npm run lint",
