@@ -43,7 +43,7 @@
     "tests": "node_modules/.bin/mocha -r ts-node/register tests/**/*.test.ts",
     "build": "sh build.sh",
     "watch": "node_modules/.bin/tsc --watch",
-    "prepublish": "npm build && rollup -c"
+    "prepublish": "npm run build && rollup -c"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
