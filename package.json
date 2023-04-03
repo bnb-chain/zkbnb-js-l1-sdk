@@ -38,12 +38,12 @@
   },
   "scripts": {
     "format": "prettier --write './**/*.{ts,js}'",
-    "lint": "pnpm run format && eslint  --ext .js,.ts --fix",
-    "pre-commit": "pnpm run lint",
+    "lint": "npm run format && eslint  --ext .js,.ts --fix",
+    "pre-commit": "npm run lint",
     "tests": "node_modules/.bin/mocha -r ts-node/register tests/**/*.test.ts",
     "build": "sh build.sh",
     "watch": "node_modules/.bin/tsc --watch",
-    "prepublish": "pnpm build && rollup -c"
+    "prepublish": "npm build && rollup -c"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
