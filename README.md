@@ -24,6 +24,8 @@ Using pnpm:
 
 #### Init
 ```typescript
+import { Wallet, Provider, getZkBNBDefaultProvider } from '@bnb-chain/zkbnb-js-l1-sdk';
+
 const rpcEndpoint = 'https://data-seed-prebsc-2-s1.binance.org:8545'; // bsc testnest rpc
 const ethWallet = new ethers.Wallet(
   'your private key',
