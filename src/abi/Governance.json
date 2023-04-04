@@ -67,9 +67,9 @@
       },
       {
         "indexed": true,
-        "internalType": "uint32",
+        "internalType": "uint16",
         "name": "collectionId",
-        "type": "uint32"
+        "type": "uint16"
       }
     ],
     "name": "NFTFactoryRegistered",
@@ -375,9 +375,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint32",
+        "internalType": "uint16",
         "name": "_collectionId",
-        "type": "uint32"
+        "type": "uint16"
       },
       {
         "internalType": "string",
@@ -403,9 +403,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint32",
+        "internalType": "uint16",
         "name": "_collectionId",
-        "type": "uint32"
+        "type": "uint16"
       }
     ],
     "name": "getNFTFactory",
@@ -528,9 +528,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint32",
+        "internalType": "uint16",
         "name": "",
-        "type": "uint32"
+        "type": "uint16"
       }
     ],
     "name": "nftFactories",
@@ -590,9 +590,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint32",
+        "internalType": "uint16",
         "name": "_collectionId",
-        "type": "uint32"
+        "type": "uint16"
       }
     ],
     "name": "registerDefaultNFTFactory",
@@ -603,9 +603,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint32",
+        "internalType": "uint16",
         "name": "_collectionId",
-        "type": "uint32"
+        "type": "uint16"
       },
       {
         "internalType": "address",

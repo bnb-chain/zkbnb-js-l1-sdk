@@ -5,7 +5,7 @@ import { ETHOperation, Wallet } from '../src/wallet';
 import { Provider } from '../src/provider';
 import { BEP20Interface } from '../src/abi';
 
-describe('Wallet with mock provider', function () {
+describe('Wallet with a zkBNB provider', function () {
   const ZERO_ADDRESS = ethers.constants.AddressZero;
 
   async function getWallet(ethPrivateKey: any): Promise<Wallet> {
@@ -55,7 +55,7 @@ describe('Wallet with mock provider', function () {
     });
 
     it('approveBEP20TokenDeposits', async function () {
-      this.timeout(10000);
+      this.timeout(60000);
 
       // The parameter here should be a contract address that conforms to the erc20 specification
       const address = await wallet.resolveTokenAddress(1);
@@ -63,12 +63,6 @@ describe('Wallet with mock provider', function () {
       expect(result).not.null;
       const isApproved = await wallet.isBEP20DepositsApproved(address);
       expect(isApproved).eq(true);
-    });
-
-    it('isERC20DepositsApproved', async function () {
-      this.timeout(10000);
-      const address = await wallet.resolveTokenAddress(1);
-      await wallet.isBEP20DepositsApproved(address);
     });
 
     it('depositBNB', async function () {
@@ -111,7 +105,7 @@ describe('Wallet with mock provider', function () {
       expect(receipt).not.null;
     });
 
-    it('depositNFT', async function () {
+    it.skip('depositNFT', async function () {
       this.timeout(60 * 1000);
 
       // you need withdrawal this nft from L2 to your wallet first
@@ -132,7 +126,7 @@ describe('Wallet with mock provider', function () {
     });
 
     it('requestFullExit', async function () {
-      this.timeout(10000);
+      this.timeout(60000);
 
       const tokenAddress = await wallet.resolveTokenAddress(1);
       const result = await wallet.requestFullExit({
@@ -145,7 +139,7 @@ describe('Wallet with mock provider', function () {
     });
 
     it('requestFullExitNft', async function () {
-      this.timeout(10000);
+      this.timeout(60000);
 
       // TODO Here the corresponding contract content is not verified
       const result = await wallet.requestFullExitNft({

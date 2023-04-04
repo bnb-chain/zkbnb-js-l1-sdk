@@ -1,8 +1,3 @@
-/*
- * @Description ethers-error-code.ts
- * @Author: rain.z
- * @Date: 2023/4/4 09:58
- */
 export enum EthersErrorCode {
 
   ///////////////////
