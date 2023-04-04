@@ -1,7 +1,5 @@
-import { BigNumber, BigNumberish, Contract, constants, ethers, utils } from 'ethers';
-import { ZkBNBProvider } from './provider-interface';
-import { Address, TokenAddress, TokenLike } from './types';
-import { BEP20Interface } from './abi';
+import { BigNumber, BigNumberish, constants, ethers, utils } from 'ethers';
+import { TokenLike } from './types';
 
 export const MAX_BEP20_APPROVE_AMOUNT = BigNumber.from(
   '115792089237316195423570985008687907853269984665640564039457584007913129639935'

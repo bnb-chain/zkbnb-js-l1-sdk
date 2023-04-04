@@ -1,20 +1,13 @@
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumberish } from 'ethers';
 
 // 0x-prefixed, hex encoded, ethereum account address
 export type Address = string;
-// sync:-prefixed, hex encoded, hash of the account public key
-export type PubKeyHash = string;
-
 // Symbol like "ETH" or "FAU" or token contract address(zero address is implied for "ETH").
 export type TokenLike = TokenSymbol | TokenAddress | number;
 // Token symbol (e.g. "ETH", "FAU", etc.)
 export type TokenSymbol = string;
 // Token address (e.g. 0xde..ad for ERC20, or 0x00.00 for "ETH")
 export type TokenAddress = string;
-
-export type TotalFee = Map<TokenLike, BigNumber>;
-
-export type Nonce = number | 'committed';
 
 export type Network = 'bscTestnet' | 'bsc';
 
