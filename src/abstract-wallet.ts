@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, Contract, ContractTransaction, ethers } from 'ethers';
-import { ErrorCode as EthersErrorCode } from '@ethersproject/logger';
+import { EthersErrorCode } from './ethers-error-code';
 import { EthMessageSigner } from './eth-message-signer';
 import { ZkBNBProvider } from './provider-interface';
 import { Address, TokenAddress, l1ChainId } from './types';
@@ -516,7 +516,7 @@ export abstract class AbstractWallet {
       ];
       if (!correctErrors.includes(error.code)) {
         // This is an error which we don't expect
-        error.message = `Ethereum smart wallet JSON RPC server returned the following error while executing an operation: "${error.message}". Please contact your smart wallet support for help.`;
+        error.message = `BSC JSON RPC server returned the following error while executing an operation: "${error.message}". Please contact your BSC support for help.`;
       }
     }
 
