@@ -33,9 +33,7 @@ export abstract class AbstractWallet {
   private assetGovernanceContract: Contract;
   private zkBNBContract: Contract;
 
-  protected constructor(public cachedAddress: Address) {
-    this.cachedAddress = cachedAddress;
-  }
+  protected constructor(public cachedAddress: Address) {}
 
   connect(provider: ZkBNBProvider) {
     this.provider = provider;

@@ -164,11 +164,12 @@ describe('Wallet with a zkBNB provider', function () {
     });
 
     it('ethMessageSigner', async function () {
-      this.timeout(10000);
+      const messageSigner = await wallet.ethMessageSigner();
 
-      const result = await wallet.ethMessageSigner();
+      expect(messageSigner).not.null;
 
-      expect(result).not.null;
+      const result  = await messageSigner.getEthMessageSignature("test");
+      expect(result.signature).not.null;
     });
   });
 

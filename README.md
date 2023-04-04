@@ -38,6 +38,17 @@ const provider = getZkBNBDefaultProvider('bscTestnet'); // bsc or bscTestnet
 const wallet = await Wallet.fromZkBNBSigner(ethWallet, provider);
 ```
 
+#### Sign message
+```typescript
+// this is used sign message by 
+const result = await provider.ethMessageSigner().getEthMessageSignature("message");
+```
+
+#### Get Current User Address
+```typescript
+const address = provider.address();
+```
+
 #### Get Asset Address By Asset Id
 ```typescript
 const assetAddress = await wallet.resolveTokenAddress('asset id');
@@ -48,46 +59,11 @@ const assetAddress = await wallet.resolveTokenAddress('asset id');
 const assetId = await wallet.resolveTokenId('asset address');
 ```
 
-#### Get NFT Address By Collection's Creator Address And Collection ID
-```typescript
-const creatorAddress = 'collection creator\'s wallet address';
-const collectionId = 1;
-// if zero address is returned, it means a dedicated nft address can be bound
-const nftAddress = await wallet.getNFTAddress(creatorAddress, collectionId);
-```
-
-#### Get NFT tokenURI
-```typescript
-const nftContentType = 0; // 0-ipfs, 1-Greenfield
-const nftContentHash = 'nft content hash';
-const tokenURI = await wallet.getNftTokenURI(nftContentType, nftContentHash);
-```
-
 #### Add Asset
 ```typescript
 const tokenAddress = 'BEP20 token address';
 // Before adding, it is recommended to check whether the asset exists and whether it can be added.
 await wallet.addAsset({ tokenAddress });
-```
-
-#### Get Pending Balance
-```typescript
-// Please change the value of the parameter according to the actual situation
-const address = 'wallet address';
-const assetAddress = 'asset address';
-
-const pendingBalance = await wallet.getPendingBalance(address, assetAddress);
-```
-
-#### Sign message
-```typescript
-// this is used sign message by 
-const result = await provider.ethMessageSigner().getEthMessageSignature("message");
-```
-
-#### Get Current User Address
-```typescript
-const address = provider.address();
 ```
 
 #### Whether The BEP20 Token Is Approved For Deposit
@@ -122,6 +98,14 @@ const result = await wallet.deposit({
   tokenAddress: 'BEP20 Address',
   amount: ethers.utils.parseEther('0.001'),
 });
+```
+
+#### Approve NFT For Deposit
+```typescript
+const approveTx = await this.approveForAllERC721TokenDeposits('nft address');
+// You can check if it is successful approved by the following method
+const isApproved = await this.isERC721DepositsApprovedForAll('nft address');
+
 ```
 
 #### Deposit NFT
@@ -165,4 +149,28 @@ await wallet.deployAndRegisterNFTFactory({
     name,
     symbol,
 });
+```
+
+#### Get NFT Address By Collection's Creator Address And Collection ID
+```typescript
+const creatorAddress = 'collection creator\'s wallet address';
+const collectionId = 1;
+// if zero address is returned, it means a dedicated nft address can be bound
+const nftAddress = await wallet.getNFTAddress(creatorAddress, collectionId);
+```
+
+#### Get NFT tokenURI
+```typescript
+const nftContentType = 0; // 0-ipfs, 1-Greenfield
+const nftContentHash = 'nft content hash';
+const tokenURI = await wallet.getNftTokenURI(nftContentType, nftContentHash);
+```
+
+#### Get Pending Balance
+```typescript
+// Please change the value of the parameter according to the actual situation
+const address = 'wallet address';
+const assetAddress = 'asset address';
+
+const pendingBalance = await wallet.getPendingBalance(address, assetAddress);
 ```
