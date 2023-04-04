@@ -207,12 +207,11 @@ describe('Wallet with mock provider', function () {
       expect(assetId).eq(1);
     });
 
-    it('query nftFactory', async function () {
+    it('query nft address', async function () {
       this.timeout(10000);
       // Since the following address must not exist, the default factory address will be returned
-      const nftFactory = await wallet.getNFTFactory('0x2fE6e6b5A084fEcd0A5cC109F7d5B5bbE9f0fE54', 1);
+      const nftFactory = await wallet.getNFTAddress('0x2fE6e6b5A084fEcd0A5cC109F7d5B5bbE9f0fE54', 1);
       expect(nftFactory).not.null;
-      expect(nftFactory).not.eq(ZERO_ADDRESS);
     });
 
     it('query nft token uri', async function () {
@@ -222,20 +221,11 @@ describe('Wallet with mock provider', function () {
       expect(tokenUri).eq('ipfs://f017012206d6f636b20686173680000000000000000000000000000000000000000000000');
     });
 
-    it('validateAssetAddress', async function () {
-      this.timeout(10000);
-      // The following address can be retrieved from getAssetAddressByAssetId
-      const address = await wallet.resolveTokenAddress(1);
-      const assetId = await wallet.validateAssetAddress(address);
-
-      expect(assetId).eq(1);
-    });
-
     it('deployAndRegisterNFTFactory', async function () {
       async function getUnusedCollectionId(): Promise<number> {
         const collectionId = Math.ceil(10000 * Math.random());
-        const factoryAddress = await wallet.getNFTFactory(wallet.address(), collectionId);
-        if (factoryAddress === wallet.provider.contractAddress.defaultNftFactoryContract) {
+        const factoryAddress = await wallet.getNFTAddress(wallet.address(), collectionId);
+        if (factoryAddress === ZERO_ADDRESS) {
           return collectionId;
         }
         return getUnusedCollectionId();
@@ -253,7 +243,7 @@ describe('Wallet with mock provider', function () {
 
       // factoryAddress get method: deployAndRegisterNFTFactory after execution,
       // by 'query nftFactory' unit test code to get
-      const factoryAddress = await wallet.getNFTFactory(wallet.address(), collectionId);
+      const factoryAddress = await wallet.getNFTAddress(wallet.address(), collectionId);
       // Just select a collectionId that does not exist
       collectionId = await getUnusedCollectionId();
       await wallet.registerNFTFactory({ collectionId, factoryAddress });
