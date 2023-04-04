@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, Contract, ContractTransaction, ethers } from 'ethers';
-import { ErrorCode as EthersErrorCode } from './ethers-error-code';
+import { ErrorCode } from './ethers-error-code';
 import { EthMessageSigner } from './eth-message-signer';
 import { ZkBNBProvider } from './provider-interface';
 import { Address, TokenAddress, l1ChainId } from './types';
@@ -509,14 +509,14 @@ export abstract class AbstractWallet {
     if (this.ethSigner instanceof ethers.providers.JsonRpcSigner) {
       // List of errors that can be caused by user's actions, which have to be forwarded as-is.
       const correctErrors = [
-        EthersErrorCode.NONCE_EXPIRED,
-        EthersErrorCode.INSUFFICIENT_FUNDS,
-        EthersErrorCode.REPLACEMENT_UNDERPRICED,
-        EthersErrorCode.UNPREDICTABLE_GAS_LIMIT,
+        ErrorCode.NONCE_EXPIRED,
+        ErrorCode.INSUFFICIENT_FUNDS,
+        ErrorCode.REPLACEMENT_UNDERPRICED,
+        ErrorCode.UNPREDICTABLE_GAS_LIMIT,
       ];
       if (!correctErrors.includes(error.code)) {
         // This is an error which we don't expect
-        error.message = `BSC smart wallet JSON RPC server returned the following error while executing an operation: "${error.message}". Please contact your smart wallet support for help.`;
+        error.message = `BSC JSON RPC server returned the following error while executing an operation: "${error.message}". Please contact your smart wallet support for help.`;
       }
     }
 
