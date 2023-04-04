@@ -1,5 +1,3 @@
-import { BigNumberish } from 'ethers';
-
 // 0x-prefixed, hex encoded, ethereum account address
 export type Address = string;
 // Symbol like "ETH" or "FAU" or token contract address(zero address is implied for "ETH").
@@ -24,21 +22,6 @@ export function l1ChainId(network?: Network): number {
   throw new Error('Unsupported network');
 }
 
-export type EthAccountType = 'Owned' | 'CREATE2' | 'No2FA';
-
-export interface Depositing {
-  balances: {
-    // Token are indexed by their symbol (e.g. "ETH")
-    [token: string]: {
-      // Sum of pending deposits for the token.
-      amount: BigNumberish;
-      // Value denoting the block number when the funds are expected
-      // to be received by zkBNB network.
-      expectedAcceptBlock: number;
-    };
-  };
-}
-
 export type EthSignerType = {
   verificationMethod: 'ECDSA' | 'ERC-1271';
   // Indicates if signer adds `\x19Ethereum Signed Message\n${msg.length}` prefix before signing message.
@@ -50,27 +33,6 @@ export interface TxEthSignature {
   type: 'EthereumSignature' | 'EIP1271Signature';
   signature: string;
 }
-
-export interface Signature {
-  pubKey: string;
-  signature: string;
-}
-
-export type Ratio = [BigNumberish, BigNumberish];
-
-/// represents ratio between tokens themself
-export type TokenRatio = {
-  type: 'Token';
-  [token: string]: string | number;
-  [token: number]: string | number;
-};
-
-/// represents ratio between lowest token denominations (wei, satoshi, etc.)
-export type WeiRatio = {
-  type: 'Wei';
-  [token: string]: BigNumberish;
-  [token: number]: BigNumberish;
-};
 
 export interface BlockInfo {
   blockNumber: number;
@@ -95,14 +57,4 @@ export interface ContractAddress {
   governanceContract: string;
   defaultNftFactoryContract: string;
   assetGovernanceContract: string;
-}
-
-export interface Tokens {
-  // Tokens are indexed by their symbol (e.g. "ETH")
-  [token: string]: {
-    address: string;
-    id: number;
-    symbol: string;
-    decimals: number;
-  };
 }
