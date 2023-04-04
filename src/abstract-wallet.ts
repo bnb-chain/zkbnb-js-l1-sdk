@@ -516,7 +516,7 @@ export abstract class AbstractWallet {
       ];
       if (!correctErrors.includes(error.code)) {
         // This is an error which we don't expect
-        error.message = `BSC JSON RPC server returned the following error while executing an operation: "${error.message}". Please contact your smart wallet support for help.`;
+        error.message = `BSC JSON RPC server returned the following error while executing an operation: "${error.message}". Please contact your BSC support for help.`;
       }
     }
 
