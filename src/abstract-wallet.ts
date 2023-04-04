@@ -75,7 +75,7 @@ export abstract class AbstractWallet {
 
   async approveBEP20TokenDeposits(
     tokenAddress: TokenAddress,
-    maxErc20ApproveAmount: BigNumberish = MAX_BEP20_APPROVE_AMOUNT
+    maxBEP20ApproveAmount: BigNumberish = MAX_BEP20_APPROVE_AMOUNT
   ): Promise<ContractTransaction> {
     if (isBNBToken(tokenAddress)) {
       throw Error('ETH token does not need approval.');
@@ -84,7 +84,7 @@ export abstract class AbstractWallet {
 
     try {
       const gasPrice = await this.ethSigner().provider.getGasPrice();
-      return erc20contract.approve(this.provider.contractAddress.zkBNBContract, maxErc20ApproveAmount, {
+      return erc20contract.approve(this.provider.contractAddress.zkBNBContract, maxBEP20ApproveAmount, {
         gasPrice,
         gasLimit: BigNumber.from(BEP20_RECOMMENDED_DEPOSIT_GAS_LIMIT),
       });
@@ -472,12 +472,15 @@ export abstract class AbstractWallet {
     return tokenAddress;
   }
 
-  async validateAssetAddress(address: string): Promise<number> {
-    return this.getGovernanceContract().validateAssetAddress(address);
-  }
-
-  async getNFTFactory(creatorAddress: string, collectionId: number): Promise<string> {
-    return this.getGovernanceContract().getNFTFactory(creatorAddress, collectionId);
+  /**
+   * get nft address
+   *  zero address means that a dedicated nft address can be bound
+   * @param creatorAddress
+   * @param collectionId
+   * @return address
+   */
+  async getNFTAddress(creatorAddress: string, collectionId: number): Promise<string> {
+    return this.getGovernanceContract().nftFactories(creatorAddress, collectionId);
   }
 
   async getNftTokenURI(nftContentType: number, nftContentHash: string): Promise<string> {

@@ -1,238 +1,103 @@
 ## ZkBNB L1 Client
 
-### Interface
-```typescript
-export abstract class AbstractWallet {
-
-  abstract ethSigner(): ethers.Signer;
-
-  abstract ethMessageSigner(): EthMessageSigner;
-
-  address(): Address;
-
-  // *************
-  // L1 operations
-
-  async approveBEP20TokenDeposits(
-    tokenAddress: TokenAddress, 
-    maxErc20ApproveAmount: BigNumberish): 
-    Promise<ContractTransaction>;
-  
-  async deposit(deposit: {
-    to: Address;
-    tokenAddress: TokenAddress;
-    amount: BigNumberish;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-    approveDepositAmountForBEP20?: boolean;
-  }): Promise<ETHOperation>;
-
-  async depositNFT(deposit: {
-    to: Address;
-    tokenAddress: TokenAddress;
-    tokenId: BigNumberish;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-    approveDepositAllNFT?: boolean;
-  }): Promise<ETHOperation>;
-
-  async requestFullExit(fullExit: {
-    tokenAddress: TokenAddress;
-    accountIndex: number;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-  }): Promise<ETHOperation>;
-
-  async requestFullExitNft(fullExitNFT: {
-    tokenId: number;
-    accountIndex: number;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-  }): Promise<ETHOperation>;
-
-  async withdrawPendingBalance(withdrawal: {
-    owner: string;
-    tokenAddress: string;
-    amount: BigNumberish;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-  }): Promise<ETHOperation>;
-
-  async withdrawPendingNFTBalance(withdrawalNFT: {
-    tokenId: number;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-  }): Promise<ETHOperation>;
-
-  async registerNFTFactory(registerNFTFactory: {
-    collectionId: BigNumberish;
-    factoryAddress: Address;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-  }): Promise<ETHOperation>;
-
-  async deployAndRegisterNFTFactory(deployAndRegisterNFTFactory: {
-    collectionId: BigNumberish;
-    name: string;
-    symbol: string;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-  }): Promise<ETHOperation>;
-
-  // AssetGovernance part
-  async addAsset(addAsset: {
-    tokenAddress: Address;
-    ethTxOptions?: ethers.providers.TransactionRequest;
-  }): Promise<ETHOperation>;
-
-  async isTokenLister(address: Address): Promise<boolean>;
-
-  // **********
-  // L1 getters
-  async isBEP20DepositsApproved(tokenAddress: TokenAddress, erc20ApproveThreshold: BigNumber): Promise<boolean>;
-
-  async isERC721DepositsApprovedForAll(tokenAddress: TokenAddress): Promise<boolean>;
-  
-  // zkBNB part
-  async getPendingBalance(address: Address, tokenAddress: TokenAddress): Promise<BigNumber>;
-
-  // governance part
-  async resolveTokenId(token: TokenAddress): Promise<number>;
-
-  async resolveTokenAddress(tokenId: number): Promise<Address>;
-
-  async validateAssetAddress(address: string): Promise<number>;
-
-  async getNFTFactory(creatorAddress: string, collectionId: number): Promise<string>;
-
-  async getNftTokenURI(nftContentType: number, nftContentHash: string): Promise<string>;
-
-}
-```
-
-## Install
+### Install
 
 Using npm:
 
 ```bash
-> npm install @bnb-chain/zkbnb-l1-sdk
+> npm install @bnb-chain/zkbnb-js-l1-sdk
 ```
 
 Using yarn:
 
 ```bash
-> yarn add @bnb-chain/zkbnb-l1-sdk
+> yarn add @bnb-chain/zkbnb-js-l1-sdk
 ```
 
 Using pnpm:
 
 ```bash
-> pnpm add @bnb-chain/zkbnb-l1-sdk
+> pnpm add @bnb-chain/zkbnb-js-l1-sdk
 ```
 
-## Usage
+### Usage
 
-### Init
+#### Init
 ```typescript
-const testEndpoint = 'https://testapi.zkbnbchain.org'; // bsc testnest
 const rpcEndpoint = 'https://data-seed-prebsc-2-s1.binance.org:8545'; // bsc testnest rpc
 const ethWallet = new ethers.Wallet(
   'your private key',
   new ethers.providers.JsonRpcProvider(rpcEndpoint)
 );
-const provider = await Provider.newHttpProvider(testEndpoint);
+const provider = getZkBNBDefaultProvider('bscTestnet'); // bsc or bscTestnet
+// or by this method
+// const testEndpoint = 'https://testapi.zkbnbchain.org'; // bsc testnest
+// const provider = await Provider.newHttpProvider(testEndpoint);
 const wallet = await Wallet.fromZkBNBSigner(ethWallet, provider);
 ```
 
-### Governance
-#### Get AssetAddress By AssetId
+#### Get Asset Address By Asset Id
 ```typescript
-const assetAddress = await wallet.resolveTokenAddress(1);
+const assetAddress = await wallet.resolveTokenAddress('asset id');
 ```
 
-#### Get AssetId By AssetAddress
+#### Get Asset Id By Asset Address
 ```typescript
-// Please use a legal address according to the actual situation
-const assetId = await wallet.resolveTokenId('0x0000000000000000000000000000000000000000');
+const assetId = await wallet.resolveTokenId('asset address');
 ```
 
-#### Validate Asset Address
+#### Get NFT Address By Collection's Creator Address And Collection ID
 ```typescript
-const addressToken = await wallet.resolveTokenAddress(1);
-
-// If it is a valid address, then return the corresponding assetId value, otherwise return 0
-const assetId = await wallet.validateAssetAddress(addressToken);
-```
-
-#### Get NFTFactory
-```typescript
-const creatorAddress = '0xXXXXXXXXXXXXXX';
+const creatorAddress = 'collection creator\'s wallet address';
 const collectionId = 1;
-// If the factory address has not been updated, the default address is returned, 
-// otherwise the updated address is returned
-const nftFactory = await wallet.getNFTFactory(creatorAddress, collectionId);
+// if zero address is returned, it means a dedicated nft address can be bound
+const nftAddress = await wallet.getNFTAddress(creatorAddress, collectionId);
 ```
 
-#### Get Nft TokenURI
+#### Get NFT tokenURI
 ```typescript
-const nftContentType = 0;
-const nftContentHash = 'hash value';
-const tokenUri = await wallet.getNftTokenURI(nftContentType, nftContentHash);
+const nftContentType = 0; // 0-ipfs, 1-Greenfield
+const nftContentHash = 'nft content hash';
+const tokenURI = await wallet.getNftTokenURI(nftContentType, nftContentHash);
 ```
 
-### AssetGovernance
 #### Add Asset
 ```typescript
-const canAdd = await wallet.isTokenLister(ZERO_ADDRESS);
-const tokenAddress = '0xXXXXXXXXXXXXXX'; // change to the token address
-let isAdded;
-try {
-    await wallet.resolveTokenId(tokenAddress);
-    isAdded = true;
-} catch (e) {
-    isAdded = false;
-}
-// Before adding, it is recommended to check whether the corresponding 
-// asset exists and whether it can be added.
-if (canAdd && !isAdded) {
-  await wallet.addAsset({ tokenAddress });
-}
+const tokenAddress = 'BEP20 token address';
+// Before adding, it is recommended to check whether the asset exists and whether it can be added.
+await wallet.addAsset({ tokenAddress });
 ```
 
-### ZkBNB
 #### Get Pending Balance
 ```typescript
 // Please change the value of the parameter according to the actual situation
-const address = '0xXXXXXXXXXXXXXX';
-const assetAddress = '0xXXXXXXXXXXXXXX';
+const address = 'wallet address';
+const assetAddress = 'asset address';
 
 const pendingBalance = await wallet.getPendingBalance(address, assetAddress);
 ```
 
-### L1 Getter
-#### Is BEP20 Deposits Approved
+#### Sign message
 ```typescript
-// The following addresse can be changed according to the actual situation
-const address = await wallet.resolveTokenAddress(1);
-const isApproved = await wallet.isBEP20DepositsApproved(address);
+// this is used sign message by 
+const result = await provider.ethMessageSigner().getEthMessageSignature("message");
 ```
 
-#### Is ERC721 Deposits ApprovedForAll
+#### Get Current User Address
 ```typescript
-// The following addresse can be changed according to the actual situation
-const address = wallet.provider.contractAddress.defaultNftFactoryContract;
-await wallet.isERC721DepositsApprovedForAll(address);
+const address = provider.address();
 ```
 
-#### Get ethMessageSigner
+#### Whether The BEP20 Token Is Approved For Deposit
 ```typescript
-const result = await client.ethMessageSigner();
+const isApproved = await wallet.isBEP20DepositsApproved('BEP20 asset address');
 ```
 
-#### Get address
+#### Approve BEP20 Token For Deposit
 ```typescript
-const address = client.address();
-```
-
-### L1 operations
-#### Approve BEP20 Token Deposits
-```typescript
-const address = await wallet.resolveTokenAddress(1);
-const result = await wallet.approveBEP20TokenDeposits(address);
-// You can determine if it is successful by using the following method
-const isApproved = await wallet.isBEP20DepositsApproved(address);
+const result = await wallet.approveBEP20TokenDeposits('BEP20 address');
+// You can check if it is successful approved by the following method
+const isApproved = await wallet.isBEP20DepositsApproved("BEP20 address");
 ```
 
 #### Deposit BNB
@@ -240,85 +105,59 @@ const isApproved = await wallet.isBEP20DepositsApproved(address);
 const tokenAddress = await wallet.resolveTokenAddress(0);
 const result = await wallet.deposit({
   to: wallet.address(),
-  tokenAddress,
+  tokenAddress: "0x0000000000000000000000000000000000000000",
   amount: ethers.utils.parseEther('0.001'),
 });
 ```
 
 #### Deposit BEP20
+Deposit funds from the BSC to the zkBNB.
+
+To do the BEP20 token transfer, this token transfer should be approved. User can make BEP20 deposits approved forever using approveBEP20TokenDeposits("token address"), or the user can approve the exact amount (required for a deposit) upon each deposit using approveBEP20TokenDeposits("token address", "exact amount"), but this is not recommended.
 ```typescript
-const tokenAddress = await wallet.resolveTokenAddress(1);
-// transfer asset from governor to this test wallet
-const governorPrivatekey = 'governor private key';
-const testEndpoint = 'https://testapi.zkbnbchain.org'; // bsc testnest
-const rpcEndpoint = 'https://data-seed-prebsc-2-s1.binance.org:8545'; // bsc testnest rpc
-
-const ethWallet = new ethers.Wallet(
-  governorPrivatekey,
-  new ethers.providers.JsonRpcProvider(rpcEndpoint)
-);
-const provider = await Provider.newHttpProvider(testEndpoint);
-const governorWallet = await Wallet.fromZkBNBSigner(ethWallet, provider);
-
-const erc20contract = new Contract(tokenAddress, BEP20Interface, governorWallet.ethSigner());
-const amount = ethers.utils.parseEther('0.001');
-const transferResult = await erc20contract.transfer(wallet.address(), amount);
-await transferResult.wait();
-
-// approveDepositAmountForBEP20 If this option is true, the approval operation will be
-// executed during the recharge process, otherwise it will not be executed
 const result = await wallet.deposit({
   to: wallet.address(),
-  tokenAddress,
-  amount,
-  approveDepositAmountForBEP20: true,
+  tokenAddress: 'BEP20 Address',
+  amount: ethers.utils.parseEther('0.001'),
 });
 ```
 
 #### Deposit NFT
+Deposit NFT from BSC to zkBNB, Only supports the nft created by zkBNB.
+
+To do the NFT transfer, this transfer should be approved by approveForAllERC721TokenDeposits("nft address") once.
+
 ```typescript
-const tokenAddress = wallet.provider.contractAddress.defaultNftFactoryContract;
-const tokenId = 1;
 const depositResult = await wallet.depositNFT({
-    to: wallet.address(), // zkbnb contract address
-    tokenAddress,
-    tokenId,
-    approveDepositAllNFT: true,
+    to: 'wallet address', // which address to deposit to
+    tokenAddress: 'nft address',
+    tokenId: 'nft ID',
 });
 ```
 
-#### Request FullExit
+#### FullExit
+Withdraw BNB or BEP20 from zkBNB to BSC
 ```typescript
-const tokenAddress = await wallet.resolveTokenAddress(1);
 const result = await wallet.requestFullExit({
-    tokenAddress,
-    accountIndex: 0,
+    tokenAddress: 'asset address',
+    accountIndex: 'account index',
 });
 ```
 
-#### Request FullExit Nft
+#### FullExit Nft
+Withdraw NFT from zkBNB to BSC
 ```typescript
 const requestResult = await wallet.requestFullExitNft({
-    tokenId: 1,
-    accountIndex: 0,
+    tokenId: 'nft ID',
+    accountIndex: 'account index',
 });
 ```
 
-#### Withdraw Pending Balance
-```typescript
-// It will not come soon
-```
-
-#### Withdraw Pending NFTBalance
-```typescript
-// It will not come soon
-```
-
-#### Deploy And Register NFTFactory
+#### Register A Dedicated NFT Contract For A Collection
 ```typescript
 const name = 'collection name';
 const symbol = 'collection symbol';
-let collectionId = xxx;
+const collectionId = 'collection Id';
 await wallet.deployAndRegisterNFTFactory({
     collectionId,
     name,
