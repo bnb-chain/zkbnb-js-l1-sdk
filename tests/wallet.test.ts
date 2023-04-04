@@ -163,6 +163,11 @@ describe('Wallet with a zkBNB provider', function () {
       // TODO Waiting for perfection
     });
 
+    it('getTokenAddress', async function () {
+      const balance = await wallet.getTokenBalance(await wallet.resolveTokenAddress(0));
+      expect(balance).not.null;
+    });
+
     it('ethMessageSigner', async function () {
       const messageSigner = await wallet.ethMessageSigner();
 

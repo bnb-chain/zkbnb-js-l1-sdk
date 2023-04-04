@@ -50,7 +50,7 @@
     "format": "prettier --write './**/*.{ts,js}'",
     "lint": "npm run format && eslint  --ext .js,.ts --fix",
     "pre-commit": "npm run lint",
-    "tests": "node_modules/.bin/mocha -r ts-node/register tests/**/*.test.ts",
+    "test": "node_modules/.bin/mocha -r ts-node/register tests/**/*.test.ts",
     "build": "sh build.sh",
     "watch": "node_modules/.bin/tsc --watch",
     "prepublish": "npm run build && rollup -c"

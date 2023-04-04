@@ -65,6 +65,42 @@ export abstract class AbstractWallet {
     return this.cachedAddress;
   }
 
+  getZkBNBContract() {
+    if (this.zkBNBContract) {
+      return this.zkBNBContract;
+    }
+    this.zkBNBContract = new ethers.Contract(
+      this.provider.contractAddress.zkBNBContract,
+      ZkBNBInterface,
+      this.ethSigner()
+    );
+    return this.zkBNBContract;
+  }
+
+  getGovernanceContract() {
+    if (this.governanceContract) {
+      return this.governanceContract;
+    }
+    this.governanceContract = new ethers.Contract(
+      this.provider.contractAddress.governanceContract,
+      GovernanceInterface,
+      this.ethSigner()
+    );
+    return this.governanceContract;
+  }
+
+  getAssetGovernanceContract() {
+    if (this.assetGovernanceContract) {
+      return this.assetGovernanceContract;
+    }
+    this.assetGovernanceContract = new ethers.Contract(
+      this.provider.contractAddress.assetGovernanceContract,
+      AssetGovernanceInterface,
+      this.ethSigner()
+    );
+    return this.assetGovernanceContract;
+  }
+
   // *************
   // L1 operations
   //
@@ -85,19 +121,6 @@ export abstract class AbstractWallet {
       return erc20contract.approve(this.provider.contractAddress.zkBNBContract, maxBEP20ApproveAmount, {
         gasPrice,
         gasLimit: BigNumber.from(BEP20_RECOMMENDED_DEPOSIT_GAS_LIMIT),
-      });
-    } catch (e) {
-      this.modifyEthersError(e);
-    }
-  }
-
-  async approveForAllERC721TokenDeposits(tokenAddress: TokenAddress): Promise<ContractTransaction> {
-    const erc721contract = new Contract(tokenAddress, ZkBNBNFTFactoryInterface, this.ethSigner());
-    try {
-      const gasPrice = await this.ethSigner().provider.getGasPrice();
-      return erc721contract.setApprovalForAll(this.provider.contractAddress.zkBNBContract, {
-        gasPrice,
-        gasLimit: BigNumber.from(ERC721_RECOMMENDED_DEPOSIT_GAS_LIMIT),
       });
     } catch (e) {
       this.modifyEthersError(e);
@@ -173,6 +196,19 @@ export abstract class AbstractWallet {
     }
 
     return new ETHOperation(ethTransaction, this.provider);
+  }
+
+  async approveForAllERC721TokenDeposits(tokenAddress: TokenAddress): Promise<ContractTransaction> {
+    const erc721contract = new Contract(tokenAddress, ZkBNBNFTFactoryInterface, this.ethSigner());
+    try {
+      const gasPrice = await this.ethSigner().provider.getGasPrice();
+      return erc721contract.setApprovalForAll(this.provider.contractAddress.zkBNBContract, {
+        gasPrice,
+        gasLimit: BigNumber.from(ERC721_RECOMMENDED_DEPOSIT_GAS_LIMIT),
+      });
+    } catch (e) {
+      this.modifyEthersError(e);
+    }
   }
 
   async depositNFT(deposit: {
@@ -405,40 +441,18 @@ export abstract class AbstractWallet {
     }
   }
 
-  getZkBNBContract() {
-    if (this.zkBNBContract) {
-      return this.zkBNBContract;
-    }
-    this.zkBNBContract = new ethers.Contract(
-      this.provider.contractAddress.zkBNBContract,
-      ZkBNBInterface,
-      this.ethSigner()
-    );
-    return this.zkBNBContract;
-  }
+  async getTokenBalance(
+    tokenAddress: TokenAddress
+  ): Promise<BigNumber> {
+    let balance: BigNumber;
+    if (isBNBToken(tokenAddress)) {
+      balance = await this.ethSigner().getBalance();
+    } else {
+      const bep20contract = new Contract(tokenAddress, BEP20Interface, this.ethSigner());
 
-  getGovernanceContract() {
-    if (this.governanceContract) {
-      return this.governanceContract;
+      balance = await bep20contract.balanceOf(this.address());
     }
-    this.governanceContract = new ethers.Contract(
-      this.provider.contractAddress.governanceContract,
-      GovernanceInterface,
-      this.ethSigner()
-    );
-    return this.governanceContract;
-  }
-
-  getAssetGovernanceContract() {
-    if (this.assetGovernanceContract) {
-      return this.assetGovernanceContract;
-    }
-    this.assetGovernanceContract = new ethers.Contract(
-      this.provider.contractAddress.assetGovernanceContract,
-      AssetGovernanceInterface,
-      this.ethSigner()
-    );
-    return this.assetGovernanceContract;
+    return balance;
   }
 
   // zkBNB part

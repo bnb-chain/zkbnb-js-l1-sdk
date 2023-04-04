@@ -1,16 +1,7 @@
 import { BigNumber, BigNumberish, Contract, constants, ethers, utils } from 'ethers';
 import { ZkBNBProvider } from './provider-interface';
-import { Address, TokenAddress, TokenLike, TokenRatio, WeiRatio } from './types';
-import { BEP20Interface, ZkBNBInterface } from './abi';
-
-// Max number of tokens for the current version, it is determined by the zkBNB circuit implementation.
-const MAX_NUMBER_OF_TOKENS = Math.pow(2, 31);
-// Max number of accounts for the current version, it is determined by the zkBNB circuit implementation.
-const MAX_NUMBER_OF_ACCOUNTS = Math.pow(2, 24);
-
-export const MAX_TIMESTAMP = 4294967295;
-export const MIN_NFT_TOKEN_ID = 65536;
-export const CURRENT_TX_VERSION = 1;
+import { Address, TokenAddress, TokenLike } from './types';
+import { BEP20Interface } from './abi';
 
 export const MAX_BEP20_APPROVE_AMOUNT = BigNumber.from(
   '115792089237316195423570985008687907853269984665640564039457584007913129639935'
@@ -39,20 +30,6 @@ const AMOUNT_EXPONENT_BIT_WIDTH = 5;
 const AMOUNT_MANTISSA_BIT_WIDTH = 35;
 const FEE_EXPONENT_BIT_WIDTH = 5;
 const FEE_MANTISSA_BIT_WIDTH = 11;
-
-export function tokenRatio(ratio: { [token: string]: string | number; [token: number]: string | number }): TokenRatio {
-  return {
-    type: 'Token',
-    ...ratio,
-  };
-}
-
-export function weiRatio(ratio: { [token: string]: BigNumberish; [token: number]: BigNumberish }): WeiRatio {
-  return {
-    type: 'Wei',
-    ...ratio,
-  };
-}
 
 export function floatToInteger(
   floatBytes: Uint8Array,
@@ -272,30 +249,3 @@ export async function signMessagePersonalAPI(signer: ethers.Signer, message: Uin
   }
 }
 
-export async function getEthereumBalance(
-  ethProvider: ethers.providers.Provider,
-  syncProvider: ZkBNBProvider,
-  address: Address,
-  tokenAddress: TokenAddress
-): Promise<BigNumber> {
-  let balance: BigNumber;
-  if (isBNBToken(tokenAddress)) {
-    balance = await ethProvider.getBalance(address);
-  } else {
-    const erc20contract = new Contract(tokenAddress, BEP20Interface, ethProvider);
-
-    balance = await erc20contract.balanceOf(address);
-  }
-  return balance;
-}
-
-export async function getPendingBalance(
-  ethProvider: ethers.providers.Provider,
-  syncProvider: ZkBNBProvider,
-  address: Address,
-  tokenAddress: TokenAddress
-): Promise<BigNumberish> {
-  const zkBNBContract = new Contract(syncProvider.contractAddress.zkBNBContract, ZkBNBInterface, ethProvider);
-
-  return zkBNBContract.getPendingBalance(address, tokenAddress);
-}

@@ -174,3 +174,8 @@ const assetAddress = 'asset address';
 
 const pendingBalance = await wallet.getPendingBalance(address, assetAddress);
 ```
+
+#### Get Token Balance On BSC
+```typescript
+const pendingBalance = await wallet.getTokenBalance('asset address');
+```
