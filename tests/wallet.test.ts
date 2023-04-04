@@ -156,11 +156,11 @@ describe('Wallet with a zkBNB provider', function () {
     });
 
     it('withdrawPendingNFTBalance', async function () {
-      // TODO Waiting for perfection
+      // TODO
     });
 
     it('withdrawPendingBalance', async function () {
-      // TODO Waiting for perfection
+      // TODO
     });
 
     it('getTokenAddress', async function () {
