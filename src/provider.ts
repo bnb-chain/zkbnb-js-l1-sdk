@@ -79,8 +79,6 @@ export class Provider extends ZkBNBProvider {
           case 'AssetGovernanceContract':
             contractAddress.assetGovernanceContract = item['address'];
             break;
-          default:
-            logger.warn(`Unsupported types: ${item['name']}`);
         }
       });
 
