@@ -41,12 +41,12 @@ const wallet = await Wallet.fromZkBNBSigner(ethWallet, provider);
 #### Sign message
 ```typescript
 // this is used sign message by 
-const result = await provider.ethMessageSigner().getEthMessageSignature("message");
+const result = await wallet.ethMessageSigner().getEthMessageSignature("message");
 ```
 
 #### Get Current User Address
 ```typescript
-const address = provider.address();
+const address = wallet.address();
 ```
 
 #### Get Asset Address By Asset Id
@@ -102,9 +102,9 @@ const result = await wallet.deposit({
 
 #### Approve NFT For Deposit
 ```typescript
-const approveTx = await this.approveForAllERC721TokenDeposits('nft address');
+const approveTx = await wallet.approveForAllERC721TokenDeposits('nft address');
 // You can check if it is successful approved by the following method
-const isApproved = await this.isERC721DepositsApprovedForAll('nft address');
+const isApproved = await wallet.isERC721DepositsApprovedForAll('nft address');
 
 ```
 
