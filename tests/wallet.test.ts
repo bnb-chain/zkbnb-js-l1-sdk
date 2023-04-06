@@ -61,7 +61,8 @@ describe('Wallet with a zkBNB provider', function () {
       const address = await wallet.resolveTokenAddress(1);
       const result = await wallet.approveBEP20TokenDeposits(address);
       expect(result).not.null;
-      const isApproved = await wallet.isBEP20DepositsApproved(address);
+      const amount = BigNumber.from(10);
+      const isApproved = await wallet.isBEP20DepositsApproved(address, amount);
       expect(isApproved).eq(true);
     });
 
