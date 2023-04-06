@@ -75,7 +75,7 @@ const isApproved = await wallet.isBEP20DepositsApproved('BEP20 asset address', '
 ```typescript
 const result = await wallet.approveBEP20TokenDeposits('BEP20 address');
 // You can check if it is successful approved by the following method
-const isApproved = await wallet.isBEP20DepositsApproved('BEP20 asset address', 'BEP20 approve amoun');
+const isApproved = await wallet.isBEP20DepositsApproved('BEP20 asset address', 'BEP20 approve amount');
 ```
 
 #### Deposit BNB
