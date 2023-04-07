@@ -5,9 +5,9 @@ import { HttpTransport } from './http-transport';
 
 export async function getZkBNBDefaultProvider(network: Network, pollIntervalMilliSecs?: number): Promise<Provider> {
   if (network === 'bsc') {
-    return await Provider.newHttpProvider('https://api.zkbnbchain.org', pollIntervalMilliSecs, network);
+    return await Provider.newHttpProvider('https://zk-api.bnbchain.org', pollIntervalMilliSecs, network);
   } else if (network === 'bscTestnet') {
-    return await Provider.newHttpProvider('https://testapi.zkbnbchain.org', pollIntervalMilliSecs, network);
+    return await Provider.newHttpProvider('https://api-testnet.zkbnbchain.org', pollIntervalMilliSecs, network);
   } else {
     throw new Error(`BSC network ${network} is not supported`);
   }
