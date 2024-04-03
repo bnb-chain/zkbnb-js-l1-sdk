@@ -1,4 +1,4 @@
-## ZkBNB L1 Client
+## ZkBNB L1 SDK
 
 ### Install
 
